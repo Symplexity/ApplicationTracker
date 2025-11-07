@@ -36,6 +36,20 @@ class TrackerCog(commands.Cog):
             applications[application_name] = Application(name=application_name)
             await ctx.send(f"Started tracking application '{application_name}'.")
 
+    @commands.command(
+        name="all_applications", aliases=["all"], help="List all tracked applications."
+    )
+    async def all_applications(self, ctx: commands.Context) -> None:
+        if not applications:
+            await ctx.send("No applications are currently being tracked.")
+            return
+
+        # TODO: Improve formatting of the output, possibly using embeds.
+        response = "Tracked Applications:\n"
+        for app in applications.values():
+            response += f"- {app.name}: {app.status}\n"
+        await ctx.send(response)
+
 
 async def setup(bot: commands.Bot) -> None:
     try:
