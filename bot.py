@@ -5,18 +5,43 @@ Main entry point for the ApplicationTracker bot.
 import discord
 import logging
 import os
+import sys
+import argparse
 
 from discord.ext import commands
-from config import DEBUG, DISCORD_TOKEN, COMMAND_PREFIX
+from config import DISCORD_TOKEN, CLIENT_ID, COMMAND_PREFIX, set_debug, get_debug
 
+# Parse command-line arguments
+parser = argparse.ArgumentParser(description="ApplicationTracker Bot")
+parser.add_argument("--debug", action="store_true", help="Run the bot in debug mode")
+parser.add_argument(
+    "--generate_invite",
+    "--invite",
+    "-g",
+    action="store_true",
+    help="Generate an invite link for the bot, then exit without starting the bot.",
+)
+args = parser.parse_args()
+
+if args.generate_invite:
+    permissions = discord.Permissions(permissions=8)  # Administrator permissions
+    invite_url = discord.utils.oauth_url(CLIENT_ID, permissions=permissions)
+    print(f"Invite link: {invite_url}")
+    sys.exit(0)
+
+set_debug(args.debug)
+DEBUG = get_debug()
+
+# Set up logging
 logger = logging.getLogger(__name__)
 if DEBUG:
     logging.basicConfig(level=logging.DEBUG)
 else:
     logging.basicConfig(level=logging.INFO)
 
+
 intents = discord.Intents.default()
-intents.message_content = True
+# intents.message_content = True
 bot = commands.Bot(command_prefix=COMMAND_PREFIX, intents=intents)
 
 
