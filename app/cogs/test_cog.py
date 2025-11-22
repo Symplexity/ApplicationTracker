@@ -4,7 +4,7 @@ A cog module for testing purposes. Contains some simple test commands.
 
 import logging
 from discord.ext import commands
-from config import get_debug
+from app.config import get_debug
 
 DEBUG = get_debug()
 
@@ -68,7 +68,7 @@ class Test(commands.Cog):
         if cog_name is None:
             await ctx.send("Please specify a cog name to unload.")
             return
-        cog_full_name = f"cogs.{cog_name}"
+        cog_full_name = f"app.cogs.{cog_name}"
         if cog_full_name in self.bot.extensions:
             try:
                 await self.bot.unload_extension(cog_full_name)
@@ -88,7 +88,7 @@ class Test(commands.Cog):
         if cog_name is None:
             await ctx.send("Please specify a cog name to load.")
             return
-        cog_full_name = f"cogs.{cog_name}"
+        cog_full_name = f"app.cogs.{cog_name}"
         if cog_full_name not in self.bot.extensions:
             try:
                 await self.bot.load_extension(cog_full_name)
@@ -108,10 +108,17 @@ class Test(commands.Cog):
     async def reload_cogs(self, ctx: commands.Context) -> None:
         import os
 
-        for filename in os.listdir("./cogs"):
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        # Check if we are in the app/cogs directory
+        if os.path.basename(dir_path) != "cogs":
+            cogs_path = os.path.join(dir_path, "cogs")
+        else:
+            cogs_path = dir_path
+
+        for filename in os.listdir(cogs_path):
             if filename.endswith("_cog.py"):
                 cog_name = filename[:-3]  # Remove .py extension
-                cog = f"cogs.{cog_name}"
+                cog = f"app.cogs.{cog_name}"
                 try:
                     if cog not in self.bot.extensions:
                         await self.bot.load_extension(cog)

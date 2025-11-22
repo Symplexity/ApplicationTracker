@@ -78,12 +78,16 @@ def _create_bot(debug: bool) -> DataBaseBot:
         else:
             logger.info("Running in production mode.")
 
+        # Find the cogs dir
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        cogs_path = os.path.join(dir_path, "cogs")
         # Load cogs
-        for filename in os.listdir("./cogs"):
+        for filename in os.listdir(cogs_path):
             if filename.endswith("_cog.py"):
+                print(f"Loading cog: {filename}")
                 cog_name = filename[:-3]
                 try:
-                    await bot.load_extension(f"cogs.{cog_name}")
+                    await bot.load_extension(f"app.cogs.{cog_name}")
                     logger.info(f"Loaded cog: {cog_name}")
                 except Exception as e:
                     logger.error(f"Failed to load cog {cog_name}: {e}")
@@ -91,7 +95,7 @@ def _create_bot(debug: bool) -> DataBaseBot:
         # Unload the test cog outside of debug mode
         if not DEBUG:
             try:
-                await bot.unload_extension("cogs.test_cog")
+                await bot.unload_extension("app.cogs.test_cog")
                 logger.info("Unloaded test_cog for production mode.")
             except Exception as e:
                 logger.error(f"Failed to unload test_cog: {e}")

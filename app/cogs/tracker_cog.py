@@ -4,7 +4,7 @@ This cog handles the main commands for application tracking functionality.
 
 import logging
 from discord.ext import commands
-from config import get_debug
+from app.config import get_debug
 
 DEBUG = get_debug()
 
