@@ -26,7 +26,6 @@ class DataBaseBot(commands.Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Initialize and test database connection
-        self.conn = None
         try:
             params = config()
             print("Connecting to the PostgreSQL database...")
