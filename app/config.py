@@ -17,6 +17,15 @@ COMMAND_PREFIX = "!"
 
 __debug = False
 
+TABLE_NAME = "tracked_applications"
+TABLE_LAYOUT = """(
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) UNIQUE NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    applied_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)"""
+
 
 def set_debug(debug: bool) -> None:
     """Sets the debug mode for the bot."""
