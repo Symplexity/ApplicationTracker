@@ -37,6 +37,21 @@ class DataBaseBot(commands.Bot):
             db_version = cur.fetchone()
             print(db_version)
             cur.close()
+
+            # Create table for tracked applications if it doesn't exist
+            cur = self.conn.cursor()
+            cur.execute(
+                """
+                CREATE TABLE IF NOT EXISTS tracked_applications (
+                    id SERIAL PRIMARY KEY,
+                    name VARCHAR(255) UNIQUE NOT NULL,
+                    status VARCHAR(50) NOT NULL,
+                    applied_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+                """
+            )
+            self.conn.commit()
+            cur.close()
         except (Exception, psycopg.DatabaseError) as error:
             print(f"Database connection error: {error}")
             sys.exit(1)
