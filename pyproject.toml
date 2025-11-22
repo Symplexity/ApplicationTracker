@@ -5,8 +5,20 @@ description = "A simple discord bot to help track job applications."
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
+    "configparser>=7.2.0",
     "discord>=2.3.2",
     "dotenv>=0.9.9",
     "psycopg[binary]>=3.2.12",
     "pytest>=8.4.2",
 ]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+[project.scripts]
+dev = "app.bot:run_dev"
+prod = "app.bot:run_prod"
